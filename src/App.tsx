@@ -9,22 +9,26 @@ function App() {
   const [fixedBoard, setFixedBoard] = React.useState<number[][]>([]);
   const [board, setBoard] = React.useState<number[][]>([]);
   const [win, setWin] = React.useState(false);
+  const [currentLevel, setCurrentLevel] = React.useState<number>(LEVEL.EASY);
+  const [level, setLevel] = React.useState<number>(currentLevel);
   const [time, startTimer, stopTimer] = useTimer();
 
   const startNewGame = React.useCallback(() => {
-    const newBoard = generateSudoku(LEVEL.MEDIUM);
+    const newBoard = generateSudoku(level);
+    setCurrentLevel(level);
     setFixedBoard(newBoard);
     setBoard(newBoard.map((row) => [...row]));
     setWin(false);
     startTimer();
-  }, []);
+  }, [level, startTimer]);
 
-  useEffect(() => startNewGame(), [startNewGame]);
+  useEffect(() => startNewGame(), []);
 
   const onRestartGame = () => {
     setBoard(fixedBoard.map((row) => [...row]));
     setWin(false);
     startTimer();
+    setCurrentLevel(level);
   };
 
   const onPlayNumberInCell = React.useCallback(
@@ -48,6 +52,10 @@ function App() {
     setWin(won);
   };
 
+  const onChangeLevel = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLevel(Number(event.target.value));
+  };
+
   const formatTime = (timestamp: number) => {
     return Intl.DateTimeFormat('default', {
       minute: '2-digit',
@@ -55,6 +63,14 @@ function App() {
       hour12: false,
       timeZone: 'UTC',
     }).format(timestamp);
+  };
+
+  const getLevelName = (level: LEVEL) => {
+    if (level === LEVEL.EASY) {
+      return 'EASY';
+    }
+
+    return level === LEVEL.MEDIUM ? 'MEDIUM' : 'HARD';
   };
 
   return (
@@ -65,6 +81,24 @@ function App() {
         onPlay={onPlayNumberInCell}
       />
       <section className="control-area">
+        <h2>Current level: {getLevelName(currentLevel)}</h2>
+        <h3>Level: {getLevelName(level)}</h3>
+        <input
+          type="range"
+          list="tickmarks"
+          name="levels"
+          min={LEVEL.EASY}
+          max={LEVEL.HARD}
+          step="5"
+          className="levelslider"
+          value={level}
+          onChange={onChangeLevel}
+        />
+        <datalist id="tickmarks">
+          <option value={LEVEL.EASY} label="EASY"></option>
+          <option value={LEVEL.MEDIUM} label="MEDIUM"></option>
+          <option value={LEVEL.HARD} label="HARD"></option>
+        </datalist>
         <button className="btn" onClick={startNewGame}>
           New game
         </button>
@@ -76,7 +110,7 @@ function App() {
         </button>
         <span className="timer">{formatTime(time)}</span>
         <h1 style={{ color: win ? 'green' : 'red', textAlign: 'center' }}>
-          {win ? 'WIN!' : 'NOT YET!'}
+          {win ? 'WIN!' : ''}
         </h1>
       </section>
     </div>

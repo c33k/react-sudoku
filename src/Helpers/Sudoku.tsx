@@ -6,8 +6,8 @@ const LIMIT = BOARD_DIMENSION * BOARD_DIMENSION;
 
 export enum LEVEL {
   EASY = 1,
-  MEDIUM = 5,
-  HARD = 10,
+  MEDIUM = 6,
+  HARD = 11,
 }
 
 const generateRandomNumbers = () => shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
