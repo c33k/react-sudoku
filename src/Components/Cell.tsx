@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React, { FocusEvent, FormEvent } from 'react';
 
 import './Cell.css';
 
@@ -7,34 +7,37 @@ interface CellProps {
   row: number;
   col: number;
   className?: string;
+  disabled: boolean;
   onSetValue: (value: number, r: number, c: number) => void;
 }
-const Cell: React.FC<CellProps> = (props: CellProps) => {
+const Cell: React.FC<CellProps> = ({
+  col,
+  row,
+  disabled,
+  onSetValue,
+  value,
+}: CellProps) => {
   const [editing, setEditing] = React.useState(false);
-  const [localValue, setLocalValue] = React.useState(props.value);
 
-  const { col, row, onSetValue } = props;
-
-  const onBlur = () => {
+  const onBlur = (event: FocusEvent) => {
     setEditing(false);
-    setLocalValue(props.value);
   };
 
   const onStartEditing = () => {
-    setEditing(true);
+    if (!disabled) {
+      setEditing(true);
+    }
   };
 
   const onFinishEditing = (event: FormEvent) => {
     event.preventDefault();
     setEditing(false);
-    onSetValue(localValue, row, col);
   };
-
   const handleChange = (event: FormEvent<HTMLInputElement>) => {
     const newValue = Number(event.currentTarget.value);
 
-    if (newValue >= 1 && newValue <= 9) {
-      setLocalValue(Number(event.currentTarget.value));
+    if (newValue >= 0 && newValue <= 9) {
+      onSetValue(Number(event.currentTarget.value), row, col);
     }
   };
 
@@ -45,10 +48,14 @@ const Cell: React.FC<CellProps> = (props: CellProps) => {
           autoFocus={true}
           onChange={handleChange}
           onBlur={onBlur}
-          value={localValue > 0 ? localValue : ''}
+          value={value > 0 ? value : ''}
         />
       </form>
     );
+  };
+
+  const style: React.CSSProperties = {
+    fontWeight: disabled ? 'bold' : 'normal',
   };
 
   return (
@@ -56,7 +63,7 @@ const Cell: React.FC<CellProps> = (props: CellProps) => {
       {editing ? (
         _renderCellInput()
       ) : (
-        <span>{localValue > 0 ? localValue : ''}</span>
+        <span style={style}>{value > 0 ? value : ''}</span>
       )}
     </button>
   );

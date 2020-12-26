@@ -171,3 +171,12 @@ export const generateSudoku = (level: LEVEL) => {
 
   return board;
 };
+
+export const isWin = (board: number[][]) => {
+  return (
+    isFilled(board) &&
+    board.some((row, r) =>
+      row.some((number, c) => !isValidMove(board, r, c, number)),
+    )
+  );
+};

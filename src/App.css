@@ -1,3 +1,44 @@
 .App {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   padding: 50px;
+  margin: auto;
+}
+
+.control-area {
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+}
+
+.btn {
+  width: 300px;
+  height: 60px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: #4a90e2;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 60px;
+  vertical-align: middle;
+  text-align: center;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  border: none;
+}
+
+.btn:hover {
+  background-color: #73a7e4;
+}
+
+.timer {
+  border-radius: 5px;
+  color: #eee;
+  background-color: #333;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  font-size: 20px;
 }

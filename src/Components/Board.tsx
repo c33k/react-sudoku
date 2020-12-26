@@ -1,28 +1,16 @@
 import React from 'react';
 import Cell from './Cell';
-import { generateSudoku, LEVEL } from '../Helpers/Sudoku';
 
 import './Board.css';
 
-const Board = () => {
-  const [board, setBoard] = React.useState<number[][]>([]);
+interface BoardProps {
+  board: number[][];
+  fixedBoard: number[][];
+  onPlay: (value: number, r: number, c: number) => void;
+}
 
-  // on the first time we open the game, we want to fill the board
-  React.useEffect(() => {
-    const newBoard = generateSudoku(LEVEL.MEDIUM);
-    setBoard(newBoard);
-  }, []);
-
-  const onPlayNumberInCell = React.useCallback(
-    (value: number, row: number, col: number) => {
-      if (board[row][col] === value) return;
-
-      const newBoard = [...board];
-      newBoard[row][col] = value;
-      setBoard(newBoard);
-    },
-    [setBoard, board],
-  );
+const Board = (props: BoardProps) => {
+  const { board, fixedBoard, onPlay } = props;
 
   const _renderRow = (row: number[], rowIdx: number) => {
     return (
@@ -40,7 +28,8 @@ const Board = () => {
         value={value}
         row={rowIdx}
         col={colIdx}
-        onSetValue={onPlayNumberInCell}
+        onSetValue={onPlay}
+        disabled={fixedBoard[rowIdx][colIdx] !== 0}
       />
     );
   };
