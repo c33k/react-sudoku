@@ -5,6 +5,8 @@ It is a basic implementation of the Sudoku game with React.
 
 There are many things to be improved. But, at the moment, we already have at least the basic mechanics of the game working.
 
+![sample of generated Sudoku](https://github.com/c33k/react-sudoku/blob/master/sudoku.jpg?raw=true)
+
 ## Improvements
 
 Improve rendering performance using reducer and context hooks.
